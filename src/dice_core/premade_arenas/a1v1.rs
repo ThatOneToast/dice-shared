@@ -109,10 +109,9 @@ impl DiceArena for OneVOneArena {
             let col = rand::thread_rng().gen_range(0..3);
 
             let current_player = self.turn.to_string();
-            info_box!(
-                format!("Simulating Move for Player {}", current_player).as_str(),
-                "{}",
-                self.p1
+            info!(
+                format!("Simulating Player {}", current_player).as_str(),
+                "Rolling dice"
             );
 
             // Make the play
@@ -126,7 +125,7 @@ impl DiceArena for OneVOneArena {
 
             debug_box!("Current Arena State", "{}", self);
 
-            // Add delay between moves
+            println!("{}", self);
             thread::sleep(delay);
         }
 
@@ -148,12 +147,48 @@ impl DiceArena for OneVOneArena {
 
 impl fmt::Display for OneVOneArena {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        writeln!(f, "Player 1: {}", self.p1)?;
-        writeln!(f, "Player 2: {}", self.p2)?;
-        writeln!(f, "Current Turn: Player {}", self.turn)?;
-        if let Some(winner) = self.winner {
-            write!(f, "Winner: Player {}", winner)?;
+        let p1_board = format!("{}", self.p1);
+        let p2_board = format!("{}", self.p2);
+
+        let p1_lines: Vec<&str> = p1_board.lines().collect();
+        let p2_lines: Vec<&str> = p2_board.lines().collect();
+
+        writeln!(
+            f,
+            "╔════════════════════════╗    ╔════════════════════════╗"
+        )?;
+        writeln!(f, "║      PLAYER ONE       ║    ║      PLAYER TWO       ║")?;
+        writeln!(
+            f,
+            "╠════════════════════════╣    ╠════════════════════════╣"
+        )?;
+        for i in 0..p1_lines.len() {
+            writeln!(f, "║  {}  ║    ║  {}  ║", p1_lines[i], p2_lines[i])?;
         }
+        writeln!(
+            f,
+            "╚════════════════════════╝    ╚════════════════════════╝"
+        )?;
+        writeln!(
+            f,
+            "╔════════════════════════ GAME STATUS ════════════════════════╗"
+        )?;
+        writeln!(
+            f,
+            "║           Current Turn: Player {:1}                          ║",
+            self.turn
+        )?;
+        if let Some(winner) = self.winner {
+            writeln!(
+                f,
+                "║           Winner: Player {:1}                                ║",
+                winner
+            )?;
+        }
+        writeln!(
+            f,
+            "╚═══════════════════════════════════════════════════════════════╝"
+        )?;
         Ok(())
     }
 }

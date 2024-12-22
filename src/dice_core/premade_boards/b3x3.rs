@@ -51,12 +51,21 @@ impl DiceBoard for Board3x3 {
 
 impl fmt::Display for Board3x3 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        for i in 0..3 {
-            write!(f, "{}", self.cols[i])?;
-            if i < 2 {
-                write!(f, " ")?;
+        writeln!(f, "┌───┬───┬───┐")?;
+        for row in (0..3).rev() {
+            write!(f, "│")?;
+            for col in 0..3 {
+                match self.cols[col].get(row) {
+                    Some(dice) => write!(f, " {} ", dice.value)?,
+                    None => write!(f, " · ")?,
+                }
+                write!(f, "│")?;
+            }
+            writeln!(f)?;
+            if row > 0 {
+                writeln!(f, "├───┼───┼───┤")?;
             }
         }
-        Ok(())
+        write!(f, "└───┴───┴───┘")
     }
 }

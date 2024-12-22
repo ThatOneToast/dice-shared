@@ -16,6 +16,16 @@ impl Default for ColumnX3 {
     }
 }
 
+impl ColumnX3 {
+    pub fn get(&self, index: usize) -> Option<&Dice> {
+        if index < self.values.len() {
+            self.values[index].as_ref()
+        } else {
+            None
+        }
+    }
+}
+
 impl DiceColumn for ColumnX3 {
     fn new() -> Self {
         Self {

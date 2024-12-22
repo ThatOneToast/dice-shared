@@ -4,6 +4,25 @@ pub mod packets;
 pub mod prelude;
 pub mod sessions;
 
+use tlogger::prelude::*;
+
+#[cfg(test)]
+mod tests {
+    use std::time::Duration;
+
+    use tlogger::{opts::set_debug, text_styling_off};
+
+    use crate::prelude::{DiceArena, OneVOneArena};
+
+    #[test]
+    fn one_vers_one_simulation() {
+        set_debug(false);
+        // text_styling_off();
+        let mut arena = OneVOneArena::new();
+        arena.simulate(Duration::from_millis(1000));
+    }
+}
+
 pub mod errors {
     use serde::{Deserialize, Serialize};
     use thiserror::Error;
